@@ -1,3 +1,4 @@
+{-# LANGUAGE DeriveAnyClass    #-}
 {-# LANGUAGE DeriveGeneric     #-}
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -25,10 +26,8 @@ sample = Arguments
     )
 
 
-data DhallConfig = DhallConfig { foo :: Natural, bar :: Double }
-  deriving (Generic, Show)
-
-instance Interpret DhallConfig
+data DhallConfig = DhallConfig { foo :: Natural, bar :: Vector Double }
+  deriving (Interpret, Generic, Show)
 
 main :: IO ()
 main = do
