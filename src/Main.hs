@@ -25,9 +25,16 @@ sample = Arguments
     <> help "Dry run mode."
     )
 
+data Actions = Clean (Vector Text)
+             | Execute (Vector Text)
+             | Link (Vector LinkStruct)
+             deriving (Eq, Interpret, Generic, Show)
 
-data DhallConfig = DhallConfig { foo :: Natural, bar :: Vector Double }
-  deriving (Interpret, Generic, Show)
+data LinkStruct = LinkStruct { dest :: Text, src :: Text }
+  deriving (Eq, Interpret, Generic, Show)
+
+data DhallConfig = DhallConfig { defaults :: Maybe (Vector Bool), conf :: Vector Actions }
+  deriving (Eq, Interpret, Generic, Show)
 
 main :: IO ()
 main = do

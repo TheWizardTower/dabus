@@ -1,4 +1,7 @@
-let Actions = constructors < Clean : List Text | Execute : List Text | Link : List { dest : Text, src : Text }>
+{ defaults = [] : Optional (List Bool)
+
+, conf =
+let Actions = constructors < Clean : List Text | Execute : List Text | Link : List { dest : Text, src : Text } >
 in
 [ Actions.Clean ["~/"]
 , Actions.Execute ["/bin/false"]
@@ -8,3 +11,4 @@ in
    }]
 , Actions.Execute ["/bin/true"]
 ]
+}
