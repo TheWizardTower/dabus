@@ -5,6 +5,7 @@
 module Main where
 
 import Data.Semigroup ((<>))
+import qualified Data.Vector as V
 import Dhall
 import Options.Applicative hiding (auto)
 
@@ -25,9 +26,13 @@ sample = Arguments
     <> help "Dry run mode."
     )
 
-data Actions = Clean (Vector Text)
-             | Execute (Vector Text)
-             | Link (Vector LinkStruct)
+type CleanTargets   = Vector Text
+type ExecuteTargets = Vector Text
+type LinkTargets    = Vector LinkStruct
+
+data Actions = Clean CleanTargets
+             | Execute ExecuteTargets
+             | Link LinkTargets
              deriving (Eq, Interpret, Generic, Show)
 
 data LinkStruct = LinkStruct { dest :: Text, src :: Text }
@@ -48,7 +53,16 @@ main = do
 
 greet :: Arguments -> IO ()
 greet (Arguments file _) = do
+  let myConfig = DhallConfig {
+        defaults = Nothing
+        , conf = V.fromList [ Clean $ V.fromList ["~/"]
+                 , Execute $ V.fromList ["/bin/false"]
+                 , Link $ V.fromList [ LinkStruct { dest = "~/.spacemacs", src = "spacemacs" }
+                        ]
+                 ]
+      }
+  print myConfig
   putStrLn "Starting Greet function."
-  x <- input auto file
+  x <- detailed $ input auto file
   putStrLn "Read file."
   print (x :: DhallConfig)
